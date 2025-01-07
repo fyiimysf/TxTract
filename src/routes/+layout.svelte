@@ -10,14 +10,16 @@
 </script>
 
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-	<TopBar/>
+	<!-- svelte-ignore a11y_consider_explicit_label -->
+	<!-- svelte-ignore node_invalid_placement_ssr -->
+	<TopBar />
 
 	{#await children}
 		<Skeleton />
 	{:then content}
-		{@render children()}
+		{@render content()}
 	{:catch error}
-		<p>Error: {error.message}</p>
+		<h1>Error: {error.message}</h1>
 	{/await}
 
 	<!-- {#if page.route.id === '/'}

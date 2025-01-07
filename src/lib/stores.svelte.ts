@@ -7,6 +7,7 @@ import { LocalStorage } from "./storage.svelte";
 
 // });
 export const theme = new LocalStorage('theme', ['lightTheme', 'darkTheme']);
+export const FabFunc = $state(function(){});
 export const output = $state({value: ''});
 export const cardData = $state( {
     image: "https://source.unsplash.com/random/400x300",

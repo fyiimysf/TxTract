@@ -162,12 +162,13 @@
 	<!-- Open the modal using ID.showModal() method -->
 
 	<Modal></Modal>
-	<div class=" fixed inset-x-1/2 top-3/4 z-50 flex items-center justify-center">
+	
+	<!-- <div class=" fixed inset-x-1/2 top-3/4 z-50 flex items-center justify-center"> -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<div class="relative inset-y-16">
+		<!-- <div class="relative inset-y-16"> -->
 			<!-- svelte-ignore a11y_missing_attribute -->
-			{#if output.value === ''}
+			<!-- {#if output.value === ''}
 				<a
 					transition:fade
 					onclick={() => {
@@ -198,7 +199,7 @@
 				</a>
 			{/if}
 		</div>
-	</div>
+	</div> -->
 
-	<BottomBar />
+	<BottomBar {handleImage} /> 
 </div>

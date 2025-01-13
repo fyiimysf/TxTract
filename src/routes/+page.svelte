@@ -12,17 +12,19 @@
 	import { page } from '$app/state';
 	import BottomBar from '$lib/BottomBar.svelte';
 	import { onMount } from 'svelte';
-	import { cardData, cards, output } from '$lib/stores.svelte';
+	import { cardData, cards, output, settings } from '$lib/stores.svelte';
 	import { text } from '@sveltejs/kit';
 
 	let camera: EasyCamera;
 	let mirrorDisplay = $state(false);
 	let useFrontCamera = $state(false);
 	let camPaused = $state(false);
+	let imgSrc: any = $state();
 	let camDevice: any = $state();
 	let textboxHeight = $state('h-32');
 	let fabIcon = $state('line-md:cellphone-screenshot');
-
+	let boolToast = $state(false);
+	let heartIcon = $state('line-md:heart');
 	$effect(() => {
 		if (output.value !== '') {
 			textboxHeight = ' h-40';
@@ -32,8 +34,9 @@
 	const handleImage = async () => {
 		let imageData = await camera.captureImage();
 		camera.pause();
+		imgSrc = imageData;
 		img2text(imageData);
-		console.log(imageData);
+		// console.log(imageData);
 		camPaused = true;
 	};
 
@@ -45,14 +48,33 @@
 		textboxHeight = 'h-32';
 	};
 
-	function addToSaves(){
-		
-		new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", month: "2-digit", year: "numeric", day: "2-digit", hour12: true, })
-		// cardData.image =  camera.captureImage(true);
+	function showToast() {
+		if (!boolToast) {
+			setTimeout(() => {
+				{
+					boolToast = true;
+				}
+			}, 10);
+			boolToast = false;
+		}
+	}
+
+	async function addToSaves() {
+		cardData.image = imgSrc;
 		cardData.content = output.value;
+		cardData.time = new Date().toLocaleTimeString([], {
+			hour: '2-digit',
+			minute: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			day: '2-digit',
+			hour12: true
+		});
+		cardData.index = cards.current.length;
 		cards.current.push(cardData);
-		console.log(JSON.stringify(cards.current));
-	;
+		// console.log(JSON.stringify(cards.current));
+		showToast();
+		
 	}
 
 	// function extractImageFile(imageData: string) {
@@ -65,7 +87,7 @@
 		(async () => {
 			const worker = await createWorker('eng');
 			const ret = await worker.recognize(image);
-			console.log(ret.data.text);
+			// console.log(ret.data.text);
 			output.value = ret.data.text;
 			await worker.terminate();
 		})();
@@ -84,13 +106,19 @@
 	};
 </script>
 
-<div class="container" transition:fade>
+<div
+	data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}
+	class="container h-screen"
+	transition:fade
+>
+	{#if boolToast}
+		{@render TopToast('Added to Favorites', 'line-md:thumbs-up')}
+	{/if}
 	<div class="">
 		<div class="card flex-col px-2">
 			<center class="flex items-center justify-center">
 				<div class="outline-3 card outline outline-offset-2">
 					<EasyCamera
-					
 						bind:this={camera}
 						autoOpen
 						style="border-radius:17px; margin-bottom: %;"
@@ -102,10 +130,14 @@
 			<div class="flex justify-evenly py-4">
 				{#if output.value !== ''}
 					<!-- After Scan Buttons -->
-					<button class="btn btn-circle w-40"
-						onclick={addToSaves}
+					<button
+						class="btn btn-circle w-40"
+						onclick={() => {
+							addToSaves();
+							heartIcon = 'line-md:heart-filled';
+						}}
 					>
-						<Icon icon="line-md:folder-arrow-down" class="h-10 w-10" />
+						<Icon icon={heartIcon} class="h-10 w-10" />
 					</button>
 					<button
 						onclick={() => {
@@ -162,13 +194,13 @@
 	<!-- Open the modal using ID.showModal() method -->
 
 	<Modal></Modal>
-	
+
 	<!-- <div class=" fixed inset-x-1/2 top-3/4 z-50 flex items-center justify-center"> -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- <div class="relative inset-y-16"> -->
-			<!-- svelte-ignore a11y_missing_attribute -->
-			<!-- {#if output.value === ''}
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- <div class="relative inset-y-16"> -->
+	<!-- svelte-ignore a11y_missing_attribute -->
+	<!-- {#if output.value === ''}
 				<a
 					transition:fade
 					onclick={() => {
@@ -201,5 +233,13 @@
 		</div>
 	</div> -->
 
-	<BottomBar {handleImage} /> 
+	<BottomBar {handleImage} />
 </div>
+{#snippet TopToast(text: any, icon: any)}
+	<div class="toast toast-center toast-top z-50 pt-14">
+		<div class="alert alert-success">
+			<span><Icon {icon} class="h-9 w-9" /> </span>
+			<span class="font-bold">{text}</span>
+		</div>
+	</div>
+{/snippet}

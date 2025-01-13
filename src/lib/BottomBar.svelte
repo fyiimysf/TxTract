@@ -10,7 +10,7 @@
 
 <!-- lg -->
 
-<div class="btm-nav btm-nav-lg fixed bottom-0 z-50 w-full bg-transparent shadow-lg">
+<div  class="btm-nav btm-nav-lg fixed bottom-0 z-50 w-full bg-transparent shadow-lg">
 	<!-- svelte-ignore a11y_missing_attribute -->
 	<button
 		onclick={() => {

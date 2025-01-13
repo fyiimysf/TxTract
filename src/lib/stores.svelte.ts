@@ -6,13 +6,15 @@
 import { LocalStorage } from "./storage.svelte";
 
 // });
-export const theme = new LocalStorage('theme', ['lightTheme', 'darkTheme']);
+export const theme = $state({value: ''});
 export const FabFunc = $state(function(){});
 export const output = $state({value: ''});
 export const cardData = $state( {
-    image: "https://source.unsplash.com/random/400x300",
+    image: '',
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", month: "2-digit", year: "numeric", day: "2-digit", hour12: true, }),
     content: '',
+    index: 0
 });
-
+export const uploadImage: any = $state({file: File});
 export const cards = new LocalStorage('cards', []);
+export const settings = new LocalStorage('settings', {darkMode: true});

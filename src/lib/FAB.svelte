@@ -13,6 +13,12 @@
 		handleImage();
 		fabIcon = 'line-md:loading-twotone-loop';
 	}
+
+	$effect(() => {
+		if (output.value === '') {
+			fabIcon = 'line-md:cellphone-screenshot';
+		}
+	});
 </script>
 
 <div class="relative z-50 flex items-center justify-center">
@@ -63,6 +69,7 @@
 					Cancel
 				</a>
 			{/if}
+		 	
 		{/if}
 	</div>
 </div>

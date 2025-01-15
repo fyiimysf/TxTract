@@ -1,12 +1,9 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 
-	import { fade, fly } from 'svelte/transition';
-	import { page } from '$app/state';
-	import { text } from '@sveltejs/kit';
-	import { uploadImage } from './stores.svelte';
+	import { imgSrc, uploadImage } from './stores.svelte';
 
-	let File:any= $state(null);
+	let File: any = $state(null);
 	const openModal = () => {
 		const my_modal_5 = document.getElementById('my_modal_5');
 		if (my_modal_5) {
@@ -32,7 +29,12 @@
 				<input
 					type="file"
 					class="file-input file-input-lg w-full max-w-xs"
-					bind:files={File}
+					onchange={(e) => {
+						const file = (e.target as HTMLInputElement).files?.[0];
+						if (file) {
+							File = URL.createObjectURL(file);
+						}
+					}}
 					accept="image/png,image/jpeg,image/jpg"
 				/>
 			{/if}
@@ -42,7 +44,8 @@
 					{#if uploadType}
 						<button
 							onclick={() => {
-								uploadImage.file = File;
+								imgSrc.img = File;
+								console.log(uploadImage.img);
 							}}
 							class="btn btn-block bg-emerald-500 text-white"
 						>

@@ -1,14 +1,20 @@
 <script lang="ts">
-	import Skeleton from '$lib/Skeleton.svelte';
-
-	import { fade, fly } from 'svelte/transition';
-	import type { PageData } from '../saved/$types';
-	import { cardData, cards } from '$lib/stores.svelte';
+	
+	import { cards, settings } from '$lib/stores.svelte';
 	import Icon from '@iconify/svelte';
+	import { fade } from 'svelte/transition';
+	import type { PageData } from '../saved/$types';
 	let { data }: { data: PageData } = $props();
+
+	function deleteCard(card: any) {
+		cards.current = cards.current.filter((c: { index: any; }) => c.index !== card.index);
+		cards.current.forEach((c: { index: number; }, i: number) => {
+			c.index = i;
+		});
+	}
 </script>
 
-<div class="h-screen flex-col" transition:fade>
+<div data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'} class="h-screen flex-col" transition:fade>
 	{#if cards.current.length === 0}
 		<div class="relative mt-[60%] space-y-4">
 			<center>
@@ -41,18 +47,22 @@
 						<p>{card.content}</p>
 					</a>
 					<div class="card-actions p-4 justify-between">
-						<button class="btn btn-ghost btn-circle btn-warning">
-							<a href="/saved/{card.time}">
+						<button onclick="{() => {deleteCard(card)}}" class="btn btn-ghost btn-circle btn-warning" aria-label="delete">
+							
 								<Icon icon="line-md:close-circle-filled" class="h-10 w-10" />
-							</a>
+							
 						</button>
 						
 					
 						
-						<button class="btn btn-ghost btn-circle btn-warning">
-							<a href="/saved/{card.time}">
+						<button onclick={()=>{
+							navigator.clipboard.writeText(card.content).then(() => {
+								console.log('Text copied to clipboard');
+							}).catch(err => {
+								console.error('Could not copy text: ', err);
+							});
+						}} class="btn btn-ghost btn-circle btn-warning">
 								<Icon icon="line-md:text-box-multiple" class="h-10 w-10" />
-							</a>
 						</button>
 						
 					</div>

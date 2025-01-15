@@ -12,19 +12,32 @@
 	import { page } from '$app/state';
 	import BottomBar from '$lib/BottomBar.svelte';
 	import { onMount } from 'svelte';
-	import { cardData, cards, output, settings } from '$lib/stores.svelte';
+	import { cardData, cards, output, settings, uploadImage, imgSrc } from '$lib/stores.svelte';
 	import { text } from '@sveltejs/kit';
 
+	// svelte-ignore non_reactive_update
 	let camera: EasyCamera;
 	let mirrorDisplay = $state(false);
 	let useFrontCamera = $state(false);
 	let camPaused = $state(false);
-	let imgSrc: any = $state();
 	let camDevice: any = $state();
 	let textboxHeight = $state('h-32');
 	let fabIcon = $state('line-md:cellphone-screenshot');
 	let boolToast = $state(false);
 	let heartIcon = $state('line-md:heart');
+	let toastdata = $state([
+		{
+			text: 'Saved to Folder',
+			icon: 'line-md:thumbs-up',
+			color: 'alert alert-success'
+		},
+		{
+			text: 'Copied to Clipboard',
+			icon: 'line-md:clipboard-arrow',
+			color: 'alert alert-info'
+		}
+	]);
+	let toastIndex = $state(0);
 	$effect(() => {
 		if (output.value !== '') {
 			textboxHeight = ' h-40';
@@ -32,15 +45,25 @@
 	});
 
 	const handleImage = async () => {
-		let imageData = await camera.captureImage();
-		camera.pause();
-		imgSrc = imageData;
-		img2text(imageData);
-		// console.log(imageData);
-		camPaused = true;
+		if (imgSrc.img != null) {
+			let imageData = imgSrc.img;
+			img2text(imageData);
+			console.log('Scanning Upload' + uploadImage.img);
+			return;
+		} else {
+			let imageData = await camera.captureImage();
+			camera.pause();
+			imgSrc.img = imageData;
+			img2text(imageData);
+			// console.log(imageData);
+			camPaused = true;
+			console.log('Scanning Photo' + imgSrc.img);
+		}
 	};
 
 	const resumeImage = async () => {
+		uploadImage.img = null;
+		imgSrc.img = null;
 		camera.resume();
 		output.value = '';
 		camPaused = false;
@@ -48,19 +71,16 @@
 		textboxHeight = 'h-32';
 	};
 
-	function showToast() {
-		if (!boolToast) {
-			setTimeout(() => {
-				{
-					boolToast = true;
-				}
-			}, 10);
+	function showToast(index: number) {
+		toastIndex = index;
+		boolToast = true;
+		setTimeout(() => {
 			boolToast = false;
-		}
+		}, 1000);
 	}
 
 	async function addToSaves() {
-		cardData.image = imgSrc;
+		cardData.image = imgSrc.img;
 		cardData.content = output.value;
 		cardData.time = new Date().toLocaleTimeString([], {
 			hour: '2-digit',
@@ -73,8 +93,7 @@
 		cardData.index = cards.current.length;
 		cards.current.push(cardData);
 		// console.log(JSON.stringify(cards.current));
-		showToast();
-		
+		showToast(0);
 	}
 
 	// function extractImageFile(imageData: string) {
@@ -86,7 +105,14 @@
 	function img2text(image: any) {
 		(async () => {
 			const worker = await createWorker('eng');
-			const ret = await worker.recognize(image);
+			let ret;
+			try {
+				ret = await worker.recognize(image);
+			} catch (error) {
+				console.error('Recognition failed:', error);
+				return;
+			}
+			
 			// console.log(ret.data.text);
 			output.value = ret.data.text;
 			await worker.terminate();
@@ -112,19 +138,28 @@
 	transition:fade
 >
 	{#if boolToast}
-		{@render TopToast('Added to Favorites', 'line-md:thumbs-up')}
+		{@render TopToast(
+			toastdata[toastIndex].text,
+			toastdata[toastIndex].icon,
+			toastdata[toastIndex].color
+		)}
 	{/if}
 	<div class="">
 		<div class="card flex-col px-2">
 			<center class="flex items-center justify-center">
 				<div class="outline-3 card outline outline-offset-2">
-					<EasyCamera
-						bind:this={camera}
-						autoOpen
-						style="border-radius:17px; margin-bottom: %;"
-						{mirrorDisplay}
-						{useFrontCamera}
-					/>
+					{#if imgSrc.img != null}
+						<!-- svelte-ignore a11y_img_redundant_alt -->
+						<img src={imgSrc.img} alt="image" />
+					{:else}
+						<EasyCamera
+							bind:this={camera}
+							autoOpen
+							style="border-radius:17px; margin-bottom: %;"
+							{mirrorDisplay}
+							{useFrontCamera}
+						/>
+					{/if}
 				</div>
 			</center>
 			<div class="flex justify-evenly py-4">
@@ -147,7 +182,7 @@
 					>
 						<Icon icon="line-md:rotate-270" class="h-11 w-11" />
 					</button>
-				{:else if output.value === ''}
+				{:else if output.value === '' && imgSrc.img == null}
 					<!-- Before Scan Buttons -->
 					<button
 						onclick={() => {
@@ -155,19 +190,30 @@
 							mirrorDisplay = !mirrorDisplay;
 							resumeImage();
 						}}
-						class="btn btn-circle btn-block mr-4"
+						class="btn btn-circle btn-block mt-3"
 					>
 						<Icon icon="line-md:round-360" class="h-12 w-12" />
+					</button>
+				{:else if imgSrc.img != null}
+					<button
+						onclick={() => {
+							imgSrc.img = null;
+							resumeImage();
+						}}
+						class="btn btn-circle btn-block mt-3"
+					>
+						<Icon icon="line-md:close-circle-filled" class="h-10 w-10" />
 					</button>
 				{/if}
 			</div>
 			<div class="shadow-3xl flex-row items-center justify-stretch">
 				<div class=" card">
-					<textarea
-						disabled
-						class="textarea relative {textboxHeight} flex-col"
-						placeholder="Text Output">{output.value}</textarea
-					>
+					{#if output.value !== ''}
+						<textarea
+							disabled
+							class="textarea relative {textboxHeight} flex-col"
+							placeholder="Text Output">{output.value}</textarea
+						>{/if}
 					<div class="card-actions justify-end">
 						<!-- svelte-ignore a11y_consider_explicit_label -->
 						{#if output.value !== ''}
@@ -181,7 +227,20 @@
 									<Icon icon="line-md:chat-off" class="h-6 w-6 text-red-400"></Icon>
 								</button>
 
-								<button class="btn btn-active btn-sm mr-4">
+								<button
+									onclick={() => {
+										navigator.clipboard
+											.writeText(output.value)
+											.then(() => {
+												console.log('Text copied to clipboard');
+												showToast(1);
+											})
+											.catch((err) => {
+												console.error('Could not copy text: ', err);
+											});
+									}}
+									class="btn btn-active btn-sm mr-4"
+								>
 									<Icon icon="line-md:clipboard-arrow" class="h-6 w-6 text-green-400"></Icon>
 								</button>
 							</div>
@@ -235,9 +294,9 @@
 
 	<BottomBar {handleImage} />
 </div>
-{#snippet TopToast(text: any, icon: any)}
-	<div class="toast toast-center toast-top z-50 pt-14">
-		<div class="alert alert-success">
+{#snippet TopToast(text: any, icon: any, color: any)}
+	<div class="toast toast-center toast-top z-50 pt-14" transition:fly={{ y: -50 }}>
+		<div class={color}>
 			<span><Icon {icon} class="h-9 w-9" /> </span>
 			<span class="font-bold">{text}</span>
 		</div>

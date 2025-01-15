@@ -1,75 +1,109 @@
 <script lang="ts">
-	import { output } from '$lib/stores.svelte';
+	import { cards, output } from '$lib/stores.svelte';
 	import EasyCamera from '@cloudparker/easy-camera-svelte';
 	import Icon from '@iconify/svelte';
-	import { fade } from 'svelte/transition';
-    import type { PageData } from './$types';
+	import { fade, fly } from 'svelte/transition';
+	import type { PageData } from './$types';
 	import { page } from '$app/state';
-    let { data, cardPageData }: { data: PageData, cardPageData: any } = $props();
+	let { data, cardPageData }: { data: PageData; cardPageData: any } = $props();
+	let boolToast = $state(false);
+	let toastdata = $state([
+		{
+			text: 'Deleted from Saved',
+			icon: 'line-md:minus-circle',
+			color: 'alert alert-warning'
+		},
+		{
+			text: 'Copied to Clipboard',
+			icon: 'line-md:clipboard-arrow',
+			color: 'alert alert-info'
+		}
+	]);
+	let toastIndex = $state(0);
 
+	function showToast(index: number) {
+		toastIndex = index;
+		boolToast = true;
+		setTimeout(() => {
+			boolToast = false;
+		}, 1000);
+	}
 
- $effect(() => {
-    console.log(data);
-});
+	$effect(() => {
+		console.log(data);
+	});
 
-
+	async function deleteCard() {
+		cards.current = cards.current.filter((c: { index: any }) => c.index !== data.index);
+		cards.current.forEach((c: { index: number }, i: number) => {
+			c.index = i;
+		});
+	}
 </script>
 
 <div class="h-screen flex-col" transition:fade>
-
-<div class="">
-	<div class="card flex-col px-2">
-		<center class="flex items-center justify-center">
+	{#if boolToast}
+		{@render TopToast(
+			toastdata[toastIndex].text,
+			toastdata[toastIndex].icon,
+			toastdata[toastIndex].color
+		)}
+	{/if}
+	<div class="">
+		<div class="card flex-col px-2">
+			<center class="flex items-center justify-center">
 				<figure class="pt-4">
 					<!-- svelte-ignore a11y_img_redundant_alt -->
 					<img class="rounded-lg" src={data.image} alt="image" />
 				</figure>
-		</center>
-		<div class="flex justify-evenly py-4">
-			<!-- After Scan Buttons -->
-			<button
-			class="btn btn-circle w-40"
-			onclick={() => {
-			}}
-					>
-					<Icon icon='line-md:heart-filled' class="h-10 w-10" />
+			</center>
+			<div class="flex justify-evenly py-4">
+				<!-- After Scan Buttons -->
+				<button
+					class="btn btn-circle w-40"
+					onclick={() => {
+						deleteCard();
+					}}
+				>
+					<a href="/saved">
+						<Icon icon="line-md:file-remove" class="h-10 w-10" />
+					</a>
 				</button>
 				<button
-				onclick={() => {
-				}}
-						class="btn btn-circle w-40"
-						>
-						<Icon icon="line-md:rotate-270" class="h-11 w-11" />
-					</button>
-					
-				</div>
-				<div class="shadow-3xl flex-row items-center justify-stretch">
-					<div class=" card">
-						<textarea
+					onclick={() => {
+						navigator.clipboard
+							.writeText(data.content)
+							.then(() => {
+								console.log('Text copied to clipboard');
+								showToast(1);
+							})
+							.catch((err) => {
+								console.error('Could not copy text: ', err);
+							});
+					}}
+					class="btn btn-circle w-40"
+				>
+					<Icon icon="line-md:clipboard-list" class="h-10 w-10" />
+				</button>
+			</div>
+			<div class="shadow-3xl flex-row items-center justify-stretch">
+				<div class=" card">
+					<textarea
 						disabled
-						class="textarea relative h-[150px] text-base-content flex-col"
+						class="textarea relative h-[150px] flex-col text-base-content"
 						placeholder="Text Output">{data.content}</textarea
-						>
-						<div class="card-actions justify-end">
-							<!-- svelte-ignore a11y_consider_explicit_label -->
-							{#if output.value !== ''}
-							<div class="flex-row items-center justify-center pb-2 pt-2">
-								<button
-								class="bg-alert btn btn-active btn-sm mr-3"
-								onclick={() => {
-								}}
-								>
-								<Icon icon="line-md:chat-off" class="h-6 w-6 text-red-400"></Icon>
-							</button>
-							
-							<button class="btn btn-active btn-sm mr-4">
-								<Icon icon="line-md:clipboard-arrow" class="h-6 w-6 text-green-400"></Icon>
-							</button>
-						</div>
-						{/if}
-					</div>
+					>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+{#snippet TopToast(text: any, icon: any, color: any)}
+	<div class="toast toast-center toast-top z-50 pt-14" transition:fly={{ y: -50 }}>
+		<div class={color}>
+			<span><Icon {icon} class="h-9 w-9" /> </span>
+			<span class="font-bold">{text}</span>
+		</div>
+	</div>
+{/snippet}

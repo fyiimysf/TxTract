@@ -15,6 +15,7 @@ export const cardData = $state( {
     content: '',
     index: 0
 });
-export const uploadImage: any = $state({file: File});
+export const imgSrc: any = $state({ img: null });
+export const uploadImage = $state({img: null});
 export const cards = new LocalStorage('cards', []);
 export const settings = new LocalStorage('settings', {darkMode: true});

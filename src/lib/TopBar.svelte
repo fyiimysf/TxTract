@@ -9,7 +9,7 @@
 	import { fade } from 'svelte/transition';
 
 	import Modal from './Modal.svelte';
-	import { cards, settings, theme } from './stores.svelte';
+	import { cards, imgSrc, settings, theme } from './stores.svelte';
 	let rightIconAction = () => {};
 	let rightIcon = $state('line-md:file-upload');
 	let isback: true | false = $state(false);
@@ -29,7 +29,11 @@
 			rightIconAction = () => {
 				openModal();
 			};
-			rightIcon = 'line-md:file-upload';
+			if (imgSrc.img != null) {
+				rightIcon = '';
+			} else {
+				rightIcon = 'line-md:file-upload';
+			}
 		}
 		if (page.route.id === '/settings') {
 			isback = true;
@@ -43,12 +47,12 @@
 			isback = true;
 			leftHref = '/';
 			title = 'Saved';
-			if (cards.current.length !== 0){
+			if (cards.current.length !== 0) {
 				rightIconAction = () => {
 					dialogueOpen = !dialogueOpen;
 				};
 				rightIcon = 'line-md:folder-cancel';
-			}else{
+			} else {
 				rightIcon = '';
 			}
 		}
@@ -61,10 +65,9 @@
 			rightIconAction = () => {};
 		}
 	});
-	
 </script>
 
-<div class="navbar bg-base-100 sticky top-0 z-50">
+<div class="navbar sticky top-0 z-50 bg-base-100">
 	{#if isback}
 		<div class="flex-none">
 			<!-- svelte-ignore a11y_consider_explicit_label -->
@@ -87,34 +90,37 @@
 			}}
 			class="btn btn-square btn-ghost"
 		>
-			
-		{#if rightIcon === 'line-md:moon-filled'}
-		<label class="swap swap-flip">
-			<!-- this hidden checkbox controls the state -->
-			<input type="checkbox" class="theme-controller"
-				 value="lightTheme"
-				 bind:checked={settings.current.darkMode}
-			 />
-				  
-			<!-- sun icon -->
-			<Icon icon="line-md:moon-alt-to-sunny-outline-loop-transition" class="swap-on h-10 w-10" />
-			
-			<!-- moon icon -->
-			<Icon icon="line-md:moon-rising-alt-loop" class="swap-off h-10 w-10" />
-		  </label>
-		  {:else}
-			<Icon icon={rightIcon} class="h-10 w-10" />
-		{/if}
+			{#if rightIcon === 'line-md:moon-filled'}
+				<label class="swap swap-flip">
+					<!-- this hidden checkbox controls the state -->
+					<input
+						type="checkbox"
+						class="theme-controller"
+						value="lightTheme"
+						bind:checked={settings.current.darkMode}
+					/>
+
+					<!-- sun icon -->
+					<Icon
+						icon="line-md:moon-alt-to-sunny-outline-loop-transition"
+						class="swap-on h-10 w-10"
+					/>
+
+					<!-- moon icon -->
+					<Icon icon="line-md:moon-rising-alt-loop" class="swap-off h-10 w-10" />
+				</label>
+			{:else}
+				<Icon icon={rightIcon} class="h-10 w-10" />
+			{/if}
 		</button>
 	</div>
 	<Modal />
-
 </div>
-<Dialogue 
+<Dialogue
 	show={dialogueOpen}
 	title="DELETE ALL SAVED SCANS!!!"
-	message = "Are You sure u wana delete all scans?"
-	yesText="PURGE EM" 
+	message="Are You sure u wana delete all scans?"
+	yesText="PURGE EM"
 	noText="NUH UH"
 	yesAction={() => {
 		dialogueOpen = false;
@@ -123,6 +129,4 @@
 	noAction={() => {
 		dialogueOpen = false;
 	}}
-	
 />
-

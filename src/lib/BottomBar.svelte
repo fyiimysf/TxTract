@@ -20,6 +20,7 @@
 		<a href="/settings">
 			<Icon icon="line-md:cog" class="h-8 w-8" />
 		</a>
+		<p class="text-base-content text-xs">Settings</p>
 	</button>
 	<!-- svelte-ignore a11y_consider_explicit_label -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -38,5 +39,6 @@
 		<a href="/saved" onclick={() => (tabNumber = 2)}>
 			<Icon icon="line-md:folder" class="h-8 w-8" />
 		</a>
+		<p class="text-base-content text-xs">Saved</p>
 	</button>
 </div>

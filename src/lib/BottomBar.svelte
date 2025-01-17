@@ -12,7 +12,7 @@
 
 <div  class="btm-nav btm-nav-lg fixed bottom-0 z-50 w-full bg-transparent shadow-lg">
 	<!-- svelte-ignore a11y_missing_attribute -->
-	<button
+	<!-- <button
 		onclick={() => {
 			tabNumber = 0;
 		}}
@@ -21,7 +21,7 @@
 			<Icon icon="line-md:cog" class="h-8 w-8" />
 		</a>
 		<p class="text-base-content text-xs">Settings</p>
-	</button>
+	</button> -->
 	<!-- svelte-ignore a11y_consider_explicit_label -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -31,7 +31,7 @@
 			
 		</div>
 	<!-- svelte-ignore a11y_consider_explicit_label -->
-	<button
+	<!-- <button
 		onclick={() => {
 			tabNumber = 2;
 		}}
@@ -40,5 +40,5 @@
 			<Icon icon="line-md:folder" class="h-8 w-8" />
 		</a>
 		<p class="text-base-content text-xs">Saved</p>
-	</button>
+	</button> -->
 </div>

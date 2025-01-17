@@ -57,6 +57,15 @@
 					<img class="rounded-lg" src={data.image} alt="image" />
 				</figure>
 			</center>
+			<div class="shadow-3xl flex-row items-center justify-stretch">
+				<div class=" card">
+					<textarea
+						disabled
+						class="textarea relative h-[150px] flex-col text-base-content"
+						placeholder="Text Output">{data.content}</textarea
+					>
+				</div>
+			</div>
 			<div class="flex justify-evenly py-4">
 				<!-- After Scan Buttons -->
 				<button
@@ -66,7 +75,7 @@
 					}}
 				>
 					<a href="/saved">
-						<Icon icon="line-md:file-remove" class="h-10 w-10" />
+						<Icon icon="line-md:close" class="h-10 w-10" />
 					</a>
 				</button>
 				<button
@@ -83,18 +92,10 @@
 					}}
 					class="btn btn-circle w-40"
 				>
-					<Icon icon="line-md:clipboard-list" class="h-10 w-10" />
+					<Icon icon="line-md:text-box-multiple" class="h-9 w-9" />
 				</button>
 			</div>
-			<div class="shadow-3xl flex-row items-center justify-stretch">
-				<div class=" card">
-					<textarea
-						disabled
-						class="textarea relative h-[150px] flex-col text-base-content"
-						placeholder="Text Output">{data.content}</textarea
-					>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 </div>

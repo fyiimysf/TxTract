@@ -176,10 +176,9 @@
 						class="btn btn-circle w-40"
 						onclick={() => {
 							addToSaves();
-							heartIcon = 'line-md:heart-filled';
 						}}
 					>
-						<Icon icon={heartIcon} class="h-10 w-10" />
+						<Icon icon='line-md:folder-plus' class="h-10 w-10" />
 					</button>
 					<button
 						onclick={() => {
@@ -187,10 +186,31 @@
 						}}
 						class="btn btn-circle w-40"
 					>
-						<Icon icon="line-md:rotate-270" class="h-11 w-11" />
+						<Icon icon="line-md:minus-circle" class="h-10 w-10" />
 					</button>
 				{:else if output.value === '' && imgSrc.img == null}
 					<!-- Before Scan Buttons -->
+					<button
+					onclick={() => {
+						resumeImage();
+					}}
+						class="btn btn-circle btn-ghost mt-2"
+						>
+						<a href="/saved" >
+							<Icon icon="line-md:folder" class="h-10 w-10" />
+						</a>
+						
+					</button>
+					<button
+					onclick={() => {
+						useFrontCamera = !useFrontCamera;
+						mirrorDisplay = !mirrorDisplay;
+						resumeImage();
+					}}
+						class="btn btn-circle w-3/5 mt-2"
+						>
+						<Icon icon="line-md:round-360" class="h-12 w-12" />
+					</button>
 					<button
 						onclick={() => {
 							openModal();
@@ -199,28 +219,7 @@
 					>
 					<Icon icon="line-md:file-upload" class="h-10 w-10" />
 					</button>
-					<button
-						onclick={() => {
-							useFrontCamera = !useFrontCamera;
-							mirrorDisplay = !mirrorDisplay;
-							resumeImage();
-						}}
-						class="btn btn-circle w-3/5 mt-2"
-					>
-						<Icon icon="line-md:round-360" class="h-12 w-12" />
-					</button>
-					<button
-						onclick={() => {
-							resumeImage();
-						}}
-						class="btn btn-circle btn-ghost mt-2"
-					>
-					<a href="/saved" >
-						<Icon icon="line-md:folder" class="h-10 w-10" />
-					</a>
-			
-					</button>
-				{:else if imgSrc.img != null}
+					{:else if imgSrc.img != null}
 					<button
 						onclick={() => {
 							imgSrc.img = null;

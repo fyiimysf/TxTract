@@ -11,11 +11,11 @@
     <div class="hero-content text-center flex-col">
         <div class="max-w-xl p-8 bg-base-100 rounded-2xl shadow-lg">
             <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                About txtract
+                About TxTract
             </h1>
             <p class="py-6 text-lg text-justify">
-                txtract is a modern text extraction and document management application built with Svelte and DaisyUI. 
-                This tool helps users efficiently extract, manage, and organize text content from various document formats.
+                TxTract is a modern text extraction and image manipulation application built with Svelte and DaisyUI. 
+                This tool helps users efficiently extract, manage, and organize text content from various image formats.
             </p>
             <div class="divider"></div>
             <div class="text-left">

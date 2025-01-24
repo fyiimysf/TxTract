@@ -57,7 +57,9 @@
 					<img class="rounded-lg" src={data.image} alt="image" />
 				</figure>
 			</center>
+			
 			<div class="flex justify-evenly py-4">
+				
 				<!-- After Scan Buttons -->
 				<button
 					class="btn btn-circle w-40"
@@ -66,7 +68,7 @@
 					}}
 				>
 					<a href="/saved">
-						<Icon icon="line-md:file-remove" class="h-10 w-10" />
+						<Icon icon="line-md:close" class="h-10 w-10" />
 					</a>
 				</button>
 				<button
@@ -83,7 +85,7 @@
 					}}
 					class="btn btn-circle w-40"
 				>
-					<Icon icon="line-md:clipboard-list" class="h-10 w-10" />
+					<Icon icon="line-md:text-box-multiple" class="h-9 w-9" />
 				</button>
 			</div>
 			<div class="shadow-3xl flex-row items-center justify-stretch">
@@ -95,6 +97,7 @@
 					>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 </div>

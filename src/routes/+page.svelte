@@ -62,13 +62,12 @@
 	};
 
 	const resumeImage = async () => {
-		uploadImage.img = null;
-		imgSrc.img = null;
-		camera.resume();
 		output.value = '';
 		camPaused = false;
 		fabIcon = 'line-md:cellphone-screenshot';
 		textboxHeight = 'h-32';
+		imgSrc.img = null;
+		camera.resume();
 	};
 
 	function showToast(index: number) {
@@ -130,11 +129,18 @@
 			a.click();
 		}
 	};
+
+	const openModal = () => {
+		const my_modal_5 = document.getElementById('my_modal_5');
+		if (my_modal_5) {
+			(my_modal_5 as HTMLDialogElement).showModal();
+		}
+	};
 </script>
 
 <div
 	data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}
-	class="container h-screen"
+	class="container h-screen "
 	transition:fade
 >
 	{#if boolToast}
@@ -144,21 +150,22 @@
 			toastdata[toastIndex].color
 		)}
 	{/if}
-	<div class="">
-		<div class="card flex-col px-2">
-			<center class="flex items-center justify-center">
-				<div class="outline-3 card outline outline-offset-2">
+	<div data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}>
+		<div class="card flex-col px-2" data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}>
+			<center class="flex items-center justify-center" data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}>
+				<div class="outline-3 rounded-3xl outline" data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'}>
 					{#if imgSrc.img != null}
 						<!-- svelte-ignore a11y_img_redundant_alt -->
 						<img src={imgSrc.img} alt="image" />
 					{:else}
-						<EasyCamera
+
+							<EasyCamera
 							bind:this={camera}
 							autoOpen
 							style="border-radius:17px; margin-bottom: %;"
 							{mirrorDisplay}
 							{useFrontCamera}
-						/>
+							/>
 					{/if}
 				</div>
 			</center>
@@ -169,10 +176,9 @@
 						class="btn btn-circle w-40"
 						onclick={() => {
 							addToSaves();
-							heartIcon = 'line-md:heart-filled';
 						}}
 					>
-						<Icon icon={heartIcon} class="h-10 w-10" />
+						<Icon icon='line-md:folder-plus' class="h-10 w-10" />
 					</button>
 					<button
 						onclick={() => {
@@ -180,21 +186,40 @@
 						}}
 						class="btn btn-circle w-40"
 					>
-						<Icon icon="line-md:rotate-270" class="h-11 w-11" />
+						<Icon icon="line-md:minus-circle" class="h-10 w-10" />
 					</button>
 				{:else if output.value === '' && imgSrc.img == null}
 					<!-- Before Scan Buttons -->
 					<button
-						onclick={() => {
-							useFrontCamera = !useFrontCamera;
-							mirrorDisplay = !mirrorDisplay;
-							resumeImage();
-						}}
-						class="btn btn-circle btn-block mt-3"
-					>
+					onclick={() => {
+						resumeImage();
+					}}
+						class="btn btn-circle btn-ghost mt-2"
+						>
+						<a href="/saved" >
+							<Icon icon="line-md:folder" class="h-10 w-10" />
+						</a>
+						
+					</button>
+					<button
+					onclick={() => {
+						useFrontCamera = !useFrontCamera;
+						mirrorDisplay = !mirrorDisplay;
+						resumeImage();
+					}}
+						class="btn btn-circle w-3/5 mt-2"
+						>
 						<Icon icon="line-md:round-360" class="h-12 w-12" />
 					</button>
-				{:else if imgSrc.img != null}
+					<button
+						onclick={() => {
+							openModal();
+						}}
+						class="btn btn-circle btn-ghost mt-2"
+					>
+					<Icon icon="line-md:file-upload" class="h-10 w-10" />
+					</button>
+					{:else if imgSrc.img != null}
 					<button
 						onclick={() => {
 							imgSrc.img = null;
@@ -291,8 +316,9 @@
 			{/if}
 		</div>
 	</div> -->
-
+   {#if output.value === ''}
 	<BottomBar {handleImage} />
+	{/if}
 </div>
 {#snippet TopToast(text: any, icon: any, color: any)}
 	<div class="toast toast-center toast-top z-50 pt-14" transition:fly={{ y: -50 }}>

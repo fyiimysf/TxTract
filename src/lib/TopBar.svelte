@@ -27,12 +27,12 @@
 			isback = false;
 			title = 'TXTract';
 			rightIconAction = () => {
-				openModal();
+				// openModal();
 			};
 			if (imgSrc.img != null) {
 				rightIcon = '';
 			} else {
-				rightIcon = 'line-md:file-upload';
+				rightIcon = 'line-md:moon-filled';
 			}
 		}
 		if (page.route.id === '/settings') {
@@ -80,7 +80,7 @@
 	{/if}
 	<div class={`flex-auto ${isback ? 'justify-center' : ''}`}>
 		<!-- svelte-ignore a11y_missing_attribute -->
-		<a class="btn btn-ghost text-xl">{title}</a>
+		<a class="btn btn-ghost text-xl" href="/about">{title}</a>
 	</div>
 	<div class="flex-none">
 		<!-- svelte-ignore a11y_consider_explicit_label -->
@@ -103,11 +103,11 @@
 					<!-- sun icon -->
 					<Icon
 						icon="line-md:moon-alt-to-sunny-outline-loop-transition"
-						class="swap-on h-10 w-10"
+						class="swap-on h-8 w-8"
 					/>
 
 					<!-- moon icon -->
-					<Icon icon="line-md:moon-rising-alt-loop" class="swap-off h-10 w-10" />
+					<Icon icon="line-md:moon-rising-alt-loop" class="swap-off h-8 w-8" />
 				</label>
 			{:else}
 				<Icon icon={rightIcon} class="h-10 w-10" />

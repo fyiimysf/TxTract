@@ -36,7 +36,7 @@
 				<div class="relative z-50 flex items-center justify-center">
 					<div class="flex-row">
 						<button
-							class="mouse h-24 w-36 rounded-3xl bg-green-600 px-4 text-white shadow-lg transition duration-200 ease-in hover:bg-red-700 focus:outline-none active:shadow-2xl"
+							class="mouse h-24 w-36 rounded-3xl bg-accent text px-4 text-white shadow-lg transition duration-200 ease-in hover:bg-red-700 focus:outline-none active:shadow-2xl"
 						>
 							<div class="flex flex-col">
 								<center>

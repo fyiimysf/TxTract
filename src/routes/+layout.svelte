@@ -13,11 +13,12 @@
 	<div data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'} class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<!-- svelte-ignore node_invalid_placement_ssr -->
-		<TopBar />
+		
 		
 		{#await children}
 		<Skeleton />
 		{:then content}
+		<TopBar />
 		<div data-theme={settings.current.darkMode ? 'darkTheme' : 'lightTheme'} class="pt-4">
 			{@render content()}
 		</div>

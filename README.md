@@ -1,38 +1,52 @@
-# sv
+# TxTract - Image Text Extraction Web App
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SvelteKit](https://img.shields.io/badge/SvelteKit-4.0.0-orange)](https://kit.svelte.dev/)
+![Tesseract.js](https://img.shields.io/badge/Tesseract.js-4.0.2-green)
 
-## Creating a project
+TxTract is a modern web application for extracting text from images using computer vision. Built with SvelteKit, it provides real-time text extraction capabilities through camera input or image uploads.
 
-If you're seeing this, you've probably already done this step. Congrats!
+![TxTract Screenshot](https://github.com/fyiimysf/TxTract/blob/c25766e75062395e34bc4a4711dbd297fe86eba0/txtractSS.png) <!-- Add actual screenshot path -->
 
+
+## Features
+
+- 📸 **Live Camera Scanning** using Easycamera integration
+- 🖼️ **Image Upload** for text extraction from files
+- 🔍 **OCR Processing** with Tesseract.js
+- 💅 **Modern UI** built with Tailwind CSS and Daisy UI components
+- ⚡ **Real-time Results** with instant text recognition
+- 📋 **Copy to Clipboard** functionality for extracted text
+- 🌓 **Dark/Light Mode** support
+
+## Technologies Used
+
+- [SvelteKit](https://kit.svelte.dev/) - Frontend framework
+- [Tesseract.js](https://tesseract.projectnaptha.com/) - OCR engine
+- [Easycamera](https://www.npmjs.com/package/easycamera) - Camera integration
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Daisy UI](https://daisyui.com/) - Component library
+- [Vite](https://vitejs.dev/) - Build tool
+
+## Installation
+
+### Prerequisites
+- Node.js v16+
+- npm v8+
+
+### Setup
+
+1. Install Node.js:
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+npm install
 ```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+2. Clone the repository:
+```bash
+git clone https://github.com/fyiimysf/TxTract.git
+cd TxTract
+```
+3. Run Dev Enviroment:
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
